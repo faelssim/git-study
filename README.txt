@@ -7,3 +7,4 @@ today, i add a branch--dev
 
 haha.
 now,i use 'switch' command to create a new branch.
+now, i use master branch.
