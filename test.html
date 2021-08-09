@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <style>
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="button1">send</button>
+    <button id="button2">get</button>
+    <script>
+        // class MPromise {
+        //     constructor(fn) {
+        //        this.state = 'pending'
+        //        this.value = this.reason = undefined
+        //        this.onFulfilledCallback = []
+        //        this.onRejectedCallback = []
+        //        const resolve = (value) => {
+        //             if (this.state === 'pending') {
+        //                 this.state = 'fulfilled'
+        //                 this.value = value
+        //                 this.onFulfilledCallback.forEach(item => item())
+        //             }
+        //        }
+        //        const reject = (reason) => {
+        //             if (this.state === 'pending') {
+        //                 this.state = 'rejected'
+        //                 this.reason = reason
+        //                 this.onRejectedCallback.push(item => item())
+        //             }
+        //        }
+        //        try {
+        //             fn(resolve, reject)
+        //        } catch (err) {
+        //             reject(new Error('参数必须是一个函数'))
+        //        }
+        //     }
+        //     then(onFulfilled, onRejected) {
+        //         if (this.state === 'fulfilled') {
+        //             onFulfilled(this.value)
+        //         }
+        //         if (this.state === 'rejected') {
+        //             onRejected(this.reason)
+        //         }
+        //         if(this.state === 'pending') {
+        //             this.onFulfilledCallback.push(() => {
+        //                 onFulfilled(this.value)
+        //             })
+        //             this.onRejectedCallback.push(() => {
+        //                 onRejected(this.value)
+        //             })
+        //         }
+        //     }
+        // }
+        function resolvePromise(promise2, x, resolve, reject) {
+            resolve(x)
+        }
+        class MPromise {
+            constructor(fn) {
+                this.state = 'pending'
+                this.value = this.reason = undefined
+                this.onFulfilledCallback = []
+                this.onRejectedCallback = []
+                const resolve = (val) => {
+                    this.state = 'fulfilled'
+                    this.value = val
+                    this.onFulfilledCallback.forEach(onFulfilled => onFulfilled(this.value))
+                }
+                const reject = (reason) => {
+                    this.state = 'rejected'
+                    this.reason = reason
+                    this.onRejectedCallback.forEach(onRejected => onRejected(this.reason))
+                }
+                try {
+                    fn(resolve, reject)
+                } catch (e) {
+                    reject(new Error('must be a function'))
+                }
+            }
+            then(onFulfilledCallback, onRejectedCallback) {
+                // var promise2 = new Promise((resolve, reject) => {
+                    
+                // });
+                // return promise2
+                if (this.state === 'fulfilled') {
+                    const x = onFulfilledCallback(this.value)
+                    return Promise.resolve(x)
+                }
+                if (this.state === 'rejected') {
+                    onRejectedCallback(this.reason)
+                    return Promise.reject()
+                }
+                if (this.state === 'pending') {
+                    this.onFulfilledCallback.push(onFulfilledCallback)
+                    this.onRejectedCallback.push(onRejectedCallback)
+                }
+            }
+        }
+        const p = new MPromise((resolve, reject) => {
+            console.log('start')
+            resolve(2)
+        })
+        // console.log(p)
+        p.then((val) => {
+            console.log(val)
+            return 2212
+        }).then(val => {
+            console.log(val)
+            return 888
+        }).then(x => {
+            console.log(x)
+        })
+    </script>
+</body>
+
+</html>

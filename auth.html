@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <style>
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="button1" onclick="removeSay()">send</button>
+    <button id="button2">get</button>
+    <script>
+        const eventControl = {
+            events: {},
+            on(key, fn) {
+                if (!this.events[key]) {
+                    this.events[key] = []
+                }
+                this.events[key].push(fn)
+            },
+            emit(key, ...args) {
+                const fns = this.events[key]
+                if (fns) {
+                    fns.forEach(item => {
+                        item.call(this, ...args)
+                    })
+                }
+            },
+            off(key, fn) {
+                const fns = this.events[key]
+                if (fns) {
+                    this.events[key] = fns.filter(item => item !== fn)
+                }
+            },
+            once(key, fn) {
+                const _fn = (...args) => {
+                    // console.log(this)
+                    fn.apply(this, args)
+                    this.off(key, _fn)
+                }
+                this.on(key, _fn)
+            },
+        }
+        //
+        function fn1() {
+            console.log('hello faelssim')
+        }
+        function say(name) {
+            console.log(`你好, ${name}`)
+        }
+        function print(name) {
+            console.log('print' + '--' + name)
+        }
+        eventControl.on('say', say)
+        eventControl.once('print', print)
+        setTimeout(() => {
+            eventControl.emit('say', 'Faelssim')
+            eventControl.emit('print', 'blue')
+            eventControl.emit('print')
+        }, 2000)
+        /**
+         * 
+         * 
+         * 
+         * 
+         * **/
+        function removeSay() {
+            eventControl.off('say', say)
+            console.log(eventControl)
+        }
+    </script>
+</body>
+
+</html>
