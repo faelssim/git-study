@@ -1,0 +1,8 @@
+[diff]
+	tool = bc
+[difftool "bc"]
+	path = "D:\\app\\Beyond Compare 4\\BCompare.exe"
+[merge]
+	tool = "bc"
+[mergetool "bc"]
+	path = "D:\\app\\Beyond Compare 4\\BCompare.exe"
