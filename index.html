@@ -7,10 +7,9 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-sacle=1, maximum-scale=1" >
         <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <!-- <script src="./flexible.js"></script> -->
         <style>
             *{
                 margin: 0;
@@ -19,13 +18,23 @@
             :root{
                 height: 100%;
             }
+            .nav{
+                width: 750rem;
+                height: 80rem;
+                background: orangered;
+            }
         </style>
+        <script>
+            function setRem() {
+                // 当前页面宽度相对于 750 宽的缩放比例，可根据自己需要修改
+                const scale = document.documentElement.clientWidth / 750;
+                document.documentElement.style.fontSize = scale + 'px';
+            }
+            setRem();
+            window.onresize = setRem;
+        </script>
     </head>
     <body>
-        <img src="./circle.svg" alt="" width="100" height="100">
-        <p>create a new branch dev.</p> 
-        <h2>Now, i'm in master.</h2>
-        <h1>switch fixbug</h1>
-        <h2>merge</h2>
+        <div class="nav"></div>
     </body>
 </html>
