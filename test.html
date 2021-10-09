@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <div class="box"></div>
+    <div class="box" id="aa">iframe</div>
     <script>
         // class MPromise {
         //     constructor(fn) {
@@ -88,10 +88,6 @@
                 }
             }
             then(onFulfilledCallback, onRejectedCallback) {
-                // var promise2 = new Promise((resolve, reject) => {
-                    
-                // });
-                // return promise2
                 if (this.state === 'fulfilled') {
                     const x = onFulfilledCallback(this.value)
                     return Promise.resolve(x)
@@ -122,12 +118,10 @@
         })
     </script>
     <script>
-        let a = class b{
-            constructor() {
-                console.log(b)
-            }
-        }
-        var c = new a()
+       const url = window.location.search
+    //    console.log(us)
+       const us = new URLSearchParams(url)
+       console.log([...us.keys()])
     </script>
 </body>
 
