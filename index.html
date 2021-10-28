@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
+<html lang="en">
 <!-- this is comment -->
 
 <head>
@@ -11,35 +11,119 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-sacle=1, maximum-scale=1" > -->
     <title></title>
-    <script src="./flexible.js"></script>
-    <script src="./js/util.js"></script>
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
         }
-        .box{
-            width: 300px;
-            height: 180px;
-            min-height: 300px;
-            background: url('./2.jpg');
-            background-size: cover;
-            background-clip: content-box;
-            padding: 20px;
-            border: 10px dashed red;
-            margin: 100px 50px;
-            display: flex;
-        }        
+        @font-face {
+            font-family: 'newNum';
+            src: url('./newNum.TTF');
+        }
+        .love-days{
+            font-family: 'newNum';
+        }
     </style>
 </head>
 
 <body>
-    <div class="box" id="box"></div>
+    <p class="love-days">804-920</p>
+    <p id="msg">For Init ...</p>
     <script>
-        const box = document.getElementById('box')
-            box.addEventListener('click', function () {
-                console.log(888999)
+        const Observer = function (data) {
+            for (let key in data) {
+                defineReactive(data, key)
+            }
+        }
+        const observer = function (data) {
+            return new Observer(data)
+        }
+        const defineReactive = function (obj, key) {
+            const dep = new Dep()
+            let val = obj[key]
+            Object.defineProperty(obj, key, {
+                enumerable: true,
+                configurable: true,
+                get() {
+                    console.log('%cget...', 'background:red;color:#fff;border-radius:4px;padding:3px 10px;')
+                    dep.depend()
+                    return val
+                },
+                set(newVal) {
+                    if (newVal === val) {
+                        return
+                    }
+                    val = newVal
+                    dep.notify()
+                }
             })
+        }
+        const Dep = function () {
+            const self = this
+            this.target = null
+            this.subs = []
+            this.depend = function () {
+                if (Dep.target) {
+                    Dep.target.addDep(self)
+                }
+            }
+            this.addSub = function (watcher) {
+                this.subs.push(watcher)
+            }
+            this.notify = function () {
+                self.subs.map(watcher => watcher.update())
+            }
+        }
+        const Watcher = function (vm, fn) {
+            const self = this
+            this.vm = vm
+            Dep.target = this
+            this.addDep = function (dep) {
+                dep.addSub(self)
+            }
+            this.update = function () {
+                console.log('%cwatcher update...', 'background:deepskyblue;color:#fff;border-radius:4px;padding:3px 10px;')
+                fn()
+            }
+            this.value = fn()
+            Dep.target = null
+        }
+
+        const Vue = function (options) {
+            const self = this
+            if (options && typeof options.data === 'function') {
+                this._data = options.data.apply(this)
+            }
+            this.mount = function () {
+                new Watcher(self, self.render)
+            }
+            this.render = function () {
+                console.log('%cRender...', 'background:gray;color:#fff;border-radius:4px;padding:3px 10px;')
+                with(self) {
+                    document.getElementById('msg').innerText = _data.text
+                }
+            }
+            observer(this._data)
+        }
+
+
+        const vue = new Vue({
+            data () {
+                return {
+                    text: 'faelssim'
+                }
+            }
+        })
+
+        vue.mount()
+        // vue._data.text = 'love'
+        setTimeout(() => {
+            vue._data.text = 'love'
+            setTimeout(() => {
+                vue._data.text = 'faelssim'
+            }, 3000)
+        }, 3000)
     </script>
 </body>
+
 </html>
